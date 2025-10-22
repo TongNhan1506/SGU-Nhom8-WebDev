@@ -1,35 +1,42 @@
-const marketItems = {
-	"Danh mục": [
-		{ name: "Toán", price: "$45", image: "https://toanmath.com/wp-content/uploads/2024/02/sach-giao-khoa-toan-12-tap-1-ket-noi-tri-thuc-voi-cuoc-song.png" },
-		{ name: "Giải tích 1", price: "$85", image: "../assets/images/vantai.png" },
-		{ name: "Xác xuất thống kê", price: "$30", image: "../assets/images/nguyenvantaingu.png" },
-		{ name: "Lý thuyết đồ thị", price: "$45", image: "../assets/images/ltđt.png" },
-		{ name: "Triết học", price: "$85", image: "../assets/images/triet.png" },
-		{ name: "Pháp luật đại cương", price: "$30", image: "../assets/images/pldc.png" },
-		{ name: "Toán rời rạc", price: "$45", image: "../assets/images/toanroirac.png" },
-		{ name: "Cờ tướng", price: "$30", image: "../assets/images/vodichthu.png" },
-		{ name: "Kinh tế chính trị", price: "$45", image: "../assets/images/ktct.png" },
-		
+export const marketItems = {
+	"Default": [
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/images/rickRoll.png" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/images/rickRoll.png" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/images/rickRoll.png" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/images/rickRoll.png" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
 		// ... other Category 1 items
 	],
-	"Danh mục 1": [
-		{ name: "Cơ sở dữ liệu", price: "$90", image: "../assets/images/rickRoll.png" },
-		{ name: "Cấu trúc dữ liệu và giải thuật", price: "$40", image: "../assets/icons/jokerBentre.jpg" },
-		{ name: "kỹ thuật lập trình", price: "$15", image: "../assets/images/rickRoll.png" },
+	"Category 2": [
+		{ name: "Floor Rug", price: "$90", image: "../assets/images/rickRoll.png" },
+		{ name: "Table Lamp", price: "$40", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Succulent Plant", price: "$15", image: "../assets/images/rickRoll.png" },
 		// ... other Category 2 items
 	],
-    "Danh mục 2": [
-		{ name: "java", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
-		{ name: "lập trình hướng đối tượng", price: "$85", image: "../assets/images/rickRoll.png" },
-		{ name: "java script", price: "$30", image: "../assets/images/rickRoll.png" },
-		{ name: "c++", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
-		{ name: "python", price: "$85", image: "../assets/images/rickRoll.png" },
-		{ name: "C#", price: "$30", image: "../assets/images/rickRoll.png" },
-
+    "Category 3": [
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/images/rickRoll.png" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/images/rickRoll.png" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/images/rickRoll.png" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Vintage Lamp", price: "$45", image: "../assets/images/rickRoll.png" },
+		{ name: "Wooden Chair", price: "$85", image: "../assets/icons/jokerBentre.jpg" },
+		{ name: "Ceramic Vase", price: "$30", image: "../assets/images/rickRoll.png" },
 		// ... other Category 1 items
 	],
 };
-
+export function initMarketPage(){
 let searchQuery = "";
 let itemsPerPage = 10;
 let selectedCategory = null;
@@ -131,7 +138,7 @@ function renderCategoryBar() {
 		});
 		categoryBar.appendChild(li);
 	});
-}		
+}
 
 // Đối với admin thì sử dụng hàm này để thêm item vào marketItems
 function addItemToCategory(item, category) {
@@ -171,7 +178,4 @@ document.querySelectorAll(".category-bar li").forEach(li => {
 		renderMarketItems(1);
 	});
 });
-function saveProductsToStorage() {
-    const dataString = JSON.stringify(marketItems);
-    localStorage.setItem("adminProducts", dataString);
 }

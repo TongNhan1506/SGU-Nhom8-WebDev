@@ -5,30 +5,12 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
   const password = document.getElementById("password").value.trim();
   const message = document.getElementById("loginMessage");
 
-  message.textContent = "";
-  message.style.color = "red";
-
-
+  // Simple hardcoded check (replace with real backend later)
   if (username === "admin" && password === "secret123") {
-    window.location.href = "../pages/admin.html";
+    window.location.href = "../pages/admin.html"; // your secret admin page
     console.log("Welcome admin");
-    return;
-  }
-
-  const users = JSON.parse(localStorage.getItem("users")) || [];
-  const foundUser = users.find(u => u.username === username && u.password === password);
-
-  if (foundUser) {
-    message.style.color = "green";
-    message.textContent = "Login successful! Redirecting...";
-
-    // Lưu thông tin người dùng đang đăng nhập
-    localStorage.setItem("currentUser", JSON.stringify(foundUser));
-
-    // ⏳ Chuyển hướng sang trang chủ sau 1.5 giây
-    setTimeout(() => {
-      window.location.href = "../index.html";
-    }, 1500);
+  } else if (username === "user" && password === "userpass") {
+    window.location.href = "../pages/market.html"; // regular user dashboard
   } else {
     message.textContent = "Invalid username or password.";
   }
