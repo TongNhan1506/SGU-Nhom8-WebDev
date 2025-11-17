@@ -1201,22 +1201,22 @@ function applyFilters() {
   for (const [categoryName, categoryData] of Object.entries(market)) {
     let items = categoryData.items;
 
-    // 1: Filter by active status first
+    //  1: Kiểm tra active
     items = items.filter(item => item.active);
 
-    // 2: Filter by name (searchQuery)
-    if (searchQuery) {
+    //  2: Tìm kiếm theo tên
+    if (searchQuery.length > 0) {
       items = items.filter(item =>
         item.name.toLowerCase().includes(searchQuery)
       );
+    } else {
+      //  3: Bỏ qua filter danh mục nếu tìm kiếm theo tên\
+      if (selectedCategory && selectedCategory !== "-- Chọn danh mục --" && categoryName !== selectedCategory) {
+        continue; // Skip this category
+      }
     }
 
-    // 3: Filter by category
-    if (selectedCategory && categoryName !== selectedCategory) {
-      continue; // Skip this category entirely
-    }
-
-    // 4: Filter by price
+    //  4: Tìm kiếm theo giá
     if (minPrice || maxPrice) {
       items = items.filter(item => {
         const price = parseInt(item.price);
@@ -1224,7 +1224,7 @@ function applyFilters() {
       });
     }
 
-    // 5: Filter by release year
+    //  5: Tìm kiếm theo năm
     if (releaseYear) {
       items = items.filter(item => item.releaseYear === releaseYear);
     }
