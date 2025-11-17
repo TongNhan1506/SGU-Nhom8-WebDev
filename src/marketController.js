@@ -1142,6 +1142,13 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
 	const paginationContainer = document.querySelector(".pagination");
 	paginationContainer.innerHTML = "";
 
+	  // Nếu số trang == 1 thì không hiện  thị thanh trang
+	  if (totalPages == 1) {
+		paginationContainer.style.display = "none";
+		return;
+	  }
+	  paginationContainer.style.display = "flex";
+
 	const createButton = (label, page, disabled = false) => {
 		const btn = document.createElement("button");
 		btn.textContent = label;
