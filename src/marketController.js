@@ -1169,6 +1169,16 @@ const dataString = localStorage.getItem("adminProducts");
 const marketItems = dataString ? JSON.parse(dataString) : market;
 let filteredResults = [];
 
+function clearFilters() {
+  // Reset all filter inputs
+  document.getElementById('minPrice').value = '';
+  document.getElementById('maxPrice').value = '';
+  document.getElementById('releaseYear').value = '';
+  document.getElementById('searchQuery').value = '';
+  document.getElementById('selectedCategory').value = '';
+}
+
+
 // Filter items
 function applyFilters() {
   const minPrice = parseInt(document.getElementById('minPrice').value) || null;
@@ -1176,26 +1186,38 @@ function applyFilters() {
   const releaseYear = parseInt(document.getElementById('releaseYear').value) || null;
   const selectedCategory = document.getElementById('selectedCategory').value;
 
-  const noFilterApplied =
-    !minPrice && !maxPrice && !releaseYear && !selectedCategory;
+  const noFilterApplied = !minPrice && !maxPrice && !releaseYear && !selectedCategory;
 
   filteredResults = [];
 
   for (const [categoryName, categoryData] of Object.entries(market)) {
-    if (selectedCategory && categoryName !== selectedCategory) continue;
+    let items = [];
+    // Tìm kiếm theo tên
+    if (searchQuery.length > 0) {
+      items = categoryData.items.filter(item => {
+        const matchesName = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return item.active && matchesName;
+      });
+    }
+    else {
+      // Tìm kiếm nâng cao, tự động bỏ qua nếu tìm kiếm theo tên
+      if (selectedCategory && categoryName !== selectedCategory) continue;
 
-    const items = categoryData.items.filter(item => {
-      if (noFilterApplied) return true;
+      items = categoryData.items.filter(item => {
+        if (noFilterApplied) return true; // Nếu ko có filter thì chọn tất cả
 
-      const price = parseInt(item.price);
-      const matchesPrice = (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
-      const matchesYear = !releaseYear || item.releaseYear === releaseYear;
-      return matchesPrice && matchesYear;
-    });
+        // Tìm kiếm theo filter nâng cao
+        const price = parseInt(item.price);
+        const matchesPrice = (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
+        const matchesYear = !releaseYear || item.releaseYear === releaseYear;
+        return matchesPrice && matchesYear && item.active;
+      });
+    }
 
     filteredResults.push(...items);
   }
-  renderMarketItems(1); // Show page 1
+
+  renderMarketItems(1);
 }
 
 // Hiện thị item trong item-container
@@ -1208,13 +1230,6 @@ function renderMarketItems(page = 1) {
   const start = (page - 1) * itemsPerPage;
 	const end = start + itemsPerPage;
 	let pageItems = filteredResults.slice(start, end); 
-
-  pageItems = pageItems.filter(item => {
-        const matchesName = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesActive = item.active !== false; // LỌC BỎ SẢN PHẨM ẨN
-        
-        return matchesActive && matchesName;
-	});
 
 	pageItems.forEach(item => {
 		const itemDiv = document.createElement("div");
@@ -1254,7 +1269,7 @@ function renderPagination(totalItems, currentPage, itemsPerPage) {
 	paginationContainer.innerHTML = "";
 
   // Nếu số trang == 1 thì không hiện  thị thanh trang
-  if (totalPages == 1) {
+  if (totalPages <= 1) {
     paginationContainer.style.display = "none";
     return;
   }
@@ -1441,6 +1456,7 @@ const searchInput = document.getElementById("searchInput");
 if (searchInput) { 
 	searchInput.addEventListener("input", e => {
 	searchQuery = e.target.value.trim();
+  applyFilters();
 	renderMarketItems(1);
 	});
 }
