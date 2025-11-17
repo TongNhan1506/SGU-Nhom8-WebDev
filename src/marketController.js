@@ -1170,48 +1170,63 @@ const marketItems = dataString ? JSON.parse(dataString) : market;
 let filteredResults = [];
 
 function clearFilters() {
-  // Reset all filter inputs
+  // Reset tất cả filter inputs
   document.getElementById('minPrice').value = '';
   document.getElementById('maxPrice').value = '';
   document.getElementById('releaseYear').value = '';
-  document.getElementById('searchQuery').value = '';
+  // document.getElementById('searchInput').value = '';
   document.getElementById('selectedCategory').value = '';
+
+  // Hiện thị tất cả item từ market
+  filteredResults = [];
+  for (const category of Object.values(market)) {
+    filteredResults.push(...category.items);
+  }
+
+  // Render full list starting from page 1
+  renderMarketItems(1);
 }
 
 
 // Filter items
 function applyFilters() {
+  const searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+  const selectedCategory = document.getElementById('selectedCategory').value;
   const minPrice = parseInt(document.getElementById('minPrice').value) || null;
   const maxPrice = parseInt(document.getElementById('maxPrice').value) || null;
   const releaseYear = parseInt(document.getElementById('releaseYear').value) || null;
-  const selectedCategory = document.getElementById('selectedCategory').value;
-
-  const noFilterApplied = !minPrice && !maxPrice && !releaseYear && !selectedCategory;
 
   filteredResults = [];
 
   for (const [categoryName, categoryData] of Object.entries(market)) {
-    let items = [];
-    // Tìm kiếm theo tên
-    if (searchQuery.length > 0) {
-      items = categoryData.items.filter(item => {
-        const matchesName = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        return item.active && matchesName;
+    let items = categoryData.items;
+
+    // 1: Filter by active status first
+    items = items.filter(item => item.active);
+
+    // 2: Filter by name (searchQuery)
+    if (searchQuery) {
+      items = items.filter(item =>
+        item.name.toLowerCase().includes(searchQuery)
+      );
+    }
+
+    // 3: Filter by category
+    if (selectedCategory && categoryName !== selectedCategory) {
+      continue; // Skip this category entirely
+    }
+
+    // 4: Filter by price
+    if (minPrice || maxPrice) {
+      items = items.filter(item => {
+        const price = parseInt(item.price);
+        return (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
       });
     }
-    else {
-      // Tìm kiếm nâng cao, tự động bỏ qua nếu tìm kiếm theo tên
-      if (selectedCategory && categoryName !== selectedCategory) continue;
 
-      items = categoryData.items.filter(item => {
-        if (noFilterApplied) return true; // Nếu ko có filter thì chọn tất cả
-
-        // Tìm kiếm theo filter nâng cao
-        const price = parseInt(item.price);
-        const matchesPrice = (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
-        const matchesYear = !releaseYear || item.releaseYear === releaseYear;
-        return matchesPrice && matchesYear && item.active;
-      });
+    // 5: Filter by release year
+    if (releaseYear) {
+      items = items.filter(item => item.releaseYear === releaseYear);
     }
 
     filteredResults.push(...items);
@@ -1492,6 +1507,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterBtn = document.querySelector('.filter-button');
   const filterPanel = document.getElementById('filter-panel');
   const applyBtn = document.getElementById('apply-filter-button');
+  const clearBtn = document.getElementById('clear-filter-button')
 
   if (filterBtn) {
     filterBtn.addEventListener('click', applyFilters);
@@ -1510,6 +1526,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (applyBtn) {
     applyBtn.addEventListener('click', applyFilters);
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', clearFilters);
   }
 
   // Close filter panel when clicking outside
