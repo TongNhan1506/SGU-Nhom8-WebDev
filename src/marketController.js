@@ -1179,8 +1179,12 @@ function clearFilters() {
 
   // Hiện thị tất cả item từ market
   filteredResults = [];
+  // Giữ lại filter bằng tên
   for (const category of Object.values(market)) {
-    filteredResults.push(...category.items);
+    let items = category.items.filter(item =>
+        item.name.toLowerCase().includes(searchQuery)
+    );
+    filteredResults.push(...items);
   }
 
   // Render full list starting from page 1
