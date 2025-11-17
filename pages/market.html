@@ -223,16 +223,24 @@
         <div class="cart-items">
             </div>
         
-        <div class="cart-summary">
-            <div class="cart-total">
-                <span class="total-label">Tổng tiền: </span>
-                <span id="total-amount">0k</span>
-            </div>
+       <div class="cart-summary">
+        <div class="cart-total">
+            <span class="total-label">Tổng tiền:</span>
+            <span id="total-amount">0k</span>
+        </div>
+
+        <div class="cart-buttons">
             <button id="checkout-btn" onclick="processCheckout()">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Thanh toán</span>
+                <i class="fas fa-qrcode"></i>
+                <span>Thanh toán bằng QR</span>
+            </button>
+
+            <button class="cash-payment-btn" onclick="processCashPayment()">
+                <i class="fas fa-money-bill-wave"></i>
+                Thanh toán khi nhận hàng
             </button>
         </div>
+    </div>
         </div>
 
     <div class="qr-modal" id="qrModal" style="display: none;">
@@ -321,6 +329,10 @@
                     <input type="password" id="accountPasswordConfirm" placeholder="Nhập lại mật khẩu mới">
                 </div>
                 
+                  <div class="form-group">
+                    <label for="address">Nhập địa chỉ:</label>
+                    <input type="text" id="accountPasswordConfirm" placeholder="Địa chỉ">
+                </div>
                 <p id="accountMsg" class="account-modal-msg"></p>
 
             </div>
