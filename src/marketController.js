@@ -1213,32 +1213,61 @@ function applyFilters() {
     //  1: Kiểm tra active
     items = items.filter(item => item.active);
 
-    //  2: Tìm kiếm theo tên
+    if (!selectedCategory || categoryName == selectedCategory || selectedCategory == "-- Chọn danh mục --") {
+      filteredResults.push(...items); 
+      continue;
+    }
+
+     //  2: Tìm kiếm theo tên
     if (searchQuery.length > 0) {
-      items = items.filter(item =>
+      items = categoryData.items.filter(item =>
         item.name.toLowerCase().includes(searchQuery)
       );
-    } else {
-      //  3: Bỏ qua filter danh mục nếu tìm kiếm theo tên\
-      if (selectedCategory && selectedCategory !== "-- Chọn danh mục --" && categoryName !== selectedCategory) {
-        continue; // Skip this category
-      }
-    }
+      filteredResults.push(...items);
+    } 
 
     //  4: Tìm kiếm theo giá
     if (minPrice || maxPrice) {
-      items = items.filter(item => {
+      items = categoryData.items.filter(item => {
         const price = parseInt(item.price);
         return (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
       });
+      filteredResults.push(...items);
     }
 
     //  5: Tìm kiếm theo năm
     if (releaseYear) {
-      items = items.filter(item => item.releaseYear === releaseYear);
+      items = categoryData.items.filter(item => item.releaseYear === releaseYear);
+      filteredResults.push(...items);
     }
 
-    filteredResults.push(...items);
+
+    // //  2: Tìm kiếm theo tên
+    // if (searchQuery.length > 0) {
+    //   items = items.filter(item =>
+    //     item.name.toLowerCase().includes(searchQuery)
+    //   );
+    // } else {
+    //   //  3: Bỏ qua filter danh mục nếu tìm kiếm theo tên\
+    //   if (selectedCategory && selectedCategory !== "-- Chọn danh mục --" && categoryName !== selectedCategory) {
+    //     continue; // Skip this category
+    //   }
+    // }
+
+    // //  4: Tìm kiếm theo giá
+    // if (minPrice || maxPrice) {
+    //   items = items.filter(item => {
+    //     const price = parseInt(item.price);
+    //     return (!minPrice || price >= minPrice) && (!maxPrice || price <= maxPrice);
+    //   });
+    // }
+
+    // //  5: Tìm kiếm theo năm
+    // if (releaseYear) {
+    //   items = items.filter(item => item.releaseYear === releaseYear);
+    // }
+
+    
   }
 
   renderMarketItems(1);
@@ -1517,10 +1546,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterPanel = document.getElementById('filter-panel');
   const applyBtn = document.getElementById('apply-filter-button');
   const clearBtn = document.getElementById('clear-filter-button')
-
-  if (filterBtn) {
-    filterBtn.addEventListener('click', applyFilters);
-  }
 
   // Populate category dropdown from market keys
   const categorySelect = document.getElementById('selectedCategory');
