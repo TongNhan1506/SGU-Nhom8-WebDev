@@ -10,6 +10,47 @@ function formatK(price) {
   return `${num}k`;
 }
 
+// ===== CART FUNCTIONS =====
+
+// Hàm cập nhật badge giỏ hàng
+window.updateCartBadge = function() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    
+    // Cập nhật badge sticky
+    const floatingBadge = document.getElementById('floating-cart-badge');
+    if (floatingBadge) {
+        floatingBadge.textContent = totalItems;
+        floatingBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+};
+
+// Hàm hiển thị giỏ hàng
+window.showCart = function() {
+    const cartContainer = document.querySelector('.cart-container');
+    const cartOverlay = document.querySelector('.cart-overlay');
+
+    if (cartContainer && cartOverlay) {
+        cartOverlay.style.display = 'block';
+        cartContainer.style.display = 'flex'; 
+        
+        setTimeout(() => {
+            cartContainer.classList.add('active');
+        }, 10);
+        
+        updateCartDisplay(); 
+    }
+};
+
+// Lắng nghe thay đổi giỏ hàng từ các tab khác
+window.addEventListener('storage', function(e) {
+    if (e.key === 'cart') {
+        updateCartBadge();
+    }
+});
+
+// ===== KẾT THÚC CART FUNCTIONS =====
+
 // Thêm sản phẩm vào giỏ hàng (sử dụng trong module marketController)
 function addToCart(item, quantity = 1) {
   if (!item) return;
