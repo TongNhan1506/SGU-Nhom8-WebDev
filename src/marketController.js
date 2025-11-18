@@ -1514,10 +1514,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const applyBtn = document.getElementById('apply-filter-button');
   const clearBtn = document.getElementById('clear-filter-button')
 
-  if (filterBtn) {
-    filterBtn.addEventListener('click', applyFilters);
-  }
-
   // Populate category dropdown from market keys
    const categorySelect = document.getElementById('selectedCategory');
 if (categorySelect) {
