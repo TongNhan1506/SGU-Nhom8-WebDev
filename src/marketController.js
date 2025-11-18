@@ -1515,7 +1515,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearBtn = document.getElementById('clear-filter-button')
 
   // Populate category dropdown from market keys
-   const categorySelect = document.getElementById('selectedCategory');
+ const categorySelect = document.getElementById('selectedCategory');
 if (categorySelect) {
 
     // thêm option tất cả
@@ -1532,6 +1532,7 @@ if (categorySelect) {
         categorySelect.appendChild(option);
     }
 }
+
 
   if (applyBtn) {
     applyBtn.addEventListener('click', applyFilters);
@@ -1551,7 +1552,7 @@ if (categorySelect) {
     }
   });
   updateCartBadge()
-	// ======== FIX SEARCH KHÔNG RELOAD ========
+  // ======== FIX SEARCH KHÔNG RELOAD ========
 
 // Ngăn form tự submit
 document.querySelector(".search-bar")?.addEventListener("submit", function(e) {
