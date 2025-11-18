@@ -1283,37 +1283,123 @@ function renderMarketItems(page = 1) {
 
 // Hiện thị thanh trang
 function renderPagination(totalItems, currentPage, itemsPerPage) {
-	const totalPages = Math.ceil(totalItems / itemsPerPage); 
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginationContainer = document.querySelector(".pagination");
+    paginationContainer.innerHTML = "";
 
-	const paginationContainer = document.querySelector(".pagination");
-	paginationContainer.innerHTML = "";
+    // 1. TÍNH TOÁN SỐ LƯỢNG NÚT DỰA TRÊN CHIỀU RỘNG MÀN HÌNH (RESPONSIVE)
+    let maxButtons;
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth > 1024) {
+        maxButtons = 7; // Màn hình lớn/Desktop
+    } else if (screenWidth > 600) {
+        maxButtons = 5; // Tablet
+    } else {
+        maxButtons = 3; // Mobile
+    }
+    
+    // Nếu số trang <= 1 thì ẩn thanh trang
+    if (totalPages <= 1) {
+        paginationContainer.style.display = "none";
+        return;
+    }
+    paginationContainer.style.display = "flex";
 
-  // Nếu số trang == 1 thì không hiện  thị thanh trang
-  if (totalPages <= 1) {
-    paginationContainer.style.display = "none";
-    return;
-  }
-  paginationContainer.style.display = "flex";
+    // Hàm tạo nút
+    const createButton = (label, page, disabled = false, isEllipsis = false) => {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.disabled = disabled;
+        btn.classList.add("page-btn");
+        if (page === currentPage && !isEllipsis) btn.classList.add("active");
+        
+        if (isEllipsis) {
+             btn.classList.add("ellipsis-btn"); 
+             
+             // LOGIC NHẢY KHỐI (BLOCK JUMPING) MỚI
+             btn.addEventListener("click", () => {
+                let jumpPage;
+                
+                // Nếu nút '...' nằm ở bên trái (page < currentPage) -> nhảy lùi
+                if (page < currentPage) {
+                    // Nhảy lùi một khối (maxButtons)
+                    jumpPage = Math.max(1, currentPage - maxButtons); 
+                } 
+                // Nếu nút '...' nằm ở bên phải (page > currentPage) -> nhảy tiến
+                else {
+                    // Nhảy tiến một khối (maxButtons)
+                    jumpPage = Math.min(totalPages, currentPage + maxButtons);
+                }
+                
+                // Chỉ chuyển trang nếu trang đích khác trang hiện tại
+                if (jumpPage !== currentPage) {
+                    renderMarketItems(jumpPage);
+                }
+             });
+        } else {
+             btn.addEventListener("click", () => {
+                renderMarketItems(page);
+             });
+        }
+        return btn;
+    };
 
-	const createButton = (label, page, disabled = false) => {
-		const btn = document.createElement("button");
-		btn.textContent = label;
-		btn.disabled = disabled;
-		btn.classList.add("page-btn");
-		if (page === currentPage) btn.classList.add("active");
-		btn.addEventListener("click", () => {
-		renderMarketItems(page);
-		});
-		return btn;
- 	};
-
+    // 2. Nút PREVIOUS
     paginationContainer.appendChild(createButton("Previous", currentPage - 1, currentPage === 1));
 
-	for (let i = 1; i <= totalPages; i++) {
-		paginationContainer.appendChild(createButton(i, i));
-	}
+    
+    let startPage = 1;
+    let endPage = totalPages;
 
-	paginationContainer.appendChild(createButton("Next", currentPage + 1, currentPage === totalPages));
+    // Logic rút gọn dãy số trang (sử dụng maxButtons đã tính toán)
+    if (totalPages > maxButtons) {
+        // Luôn giữ trang hiện tại ở giữa
+        const half = Math.floor(maxButtons / 2);
+        
+        startPage = currentPage - half;
+        endPage = currentPage + half;
+
+        // Xử lý tràn lề trái
+        if (startPage < 1) {
+            startPage = 1;
+            endPage = maxButtons;
+        }
+
+        // Xử lý tràn lề phải
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = totalPages - maxButtons + 1;
+        }
+        // Đảm bảo startPage không nhỏ hơn 1 
+        if (startPage < 1) startPage = 1; 
+    }
+    
+    // 3. Hiển thị trang đầu tiên và dấu "..." bên trái nếu cần
+    if (startPage > 1) {
+        paginationContainer.appendChild(createButton(1, 1));
+        if (startPage > 2) {
+            // Giá trị page 1 được sử dụng để xác định đây là '...' bên trái (page < currentPage)
+            paginationContainer.appendChild(createButton("...", 1, false, true)); 
+        }
+    }
+
+    // 4. Các nút số trang chính
+    for (let i = startPage; i <= endPage; i++) {
+        paginationContainer.appendChild(createButton(i, i));
+    }
+
+    // 5. Hiển thị trang cuối cùng và dấu "..." bên phải nếu cần
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            // Giá trị page totalPages được sử dụng để xác định đây là '...' bên phải (page > currentPage)
+            paginationContainer.appendChild(createButton("...", totalPages, false, true)); 
+        }
+        paginationContainer.appendChild(createButton(totalPages, totalPages));
+    }
+
+    // 6. Nút NEXT
+    paginationContainer.appendChild(createButton("Next", currentPage + 1, currentPage === totalPages));
 }
 
 function showProductDetail(item) {
