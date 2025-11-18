@@ -1873,3 +1873,12 @@
         height: 26px;
     }
 }
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-footer {
+    margin-top: auto;
+}
