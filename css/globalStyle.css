@@ -203,9 +203,13 @@ nav a.accent-link{
 		position: fixed;
         top: 10px;
         right: 10px;
-        z-index: 1000;
+        z-index: 20;
 	}
 	
+	#logo-name{
+		font-size: 24px;
+	}
+
 	nav{
 		position: fixed;
 		top: 0;
@@ -260,6 +264,9 @@ nav a.accent-link{
 		margin-right: unset;
 		padding: 1em;
 		width: 100%;
+	}
+	nav .home-li:hover{
+		background-color: var(--navbar-hover-color);
 	}
 	
 	nav .home-li a{
@@ -331,7 +338,7 @@ nav a.accent-link{
     padding-top: 50px;
     font-size: 0.95rem;
     width: 100%;
-	 margin-top: auto; /* đẩy footer xuống đáy */
+	margin-top: auto;
 }
 
 .footer-container {
